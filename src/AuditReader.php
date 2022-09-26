@@ -19,6 +19,8 @@ use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\QuoteStrategy;
 use Doctrine\ORM\ORMException;
@@ -1197,6 +1199,10 @@ class AuditReader
                 $reflField->setValue($entity, new ArrayCollection());
             }
         }
+
+        $eventManager = $this->em->getEventManager();
+        $eventArgs = new LifecycleEventArgs($entity, $this->em);
+        $eventManager->dispatchEvent(Events::postLoad, $eventArgs);
 
         return $entity;
     }
