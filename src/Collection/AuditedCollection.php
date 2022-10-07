@@ -409,7 +409,7 @@ class AuditedCollection implements Collection
     /**
      * @return object
      *
-     * @phpstan-return T
+     * @phpstan-return T|null
      */
     #[\ReturnTypeWillChange]
     public function offsetGet($offset)
@@ -424,7 +424,7 @@ class AuditedCollection implements Collection
         $this->initialize();
 
         if (!$this->entities->offsetExists($offset)) {
-            throw new AuditedCollectionException(sprintf('Offset "%s" is not defined', $offset));
+            return null;
         }
 
         $entity = $this->entities->offsetGet($offset);
